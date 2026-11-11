@@ -1,0 +1,52 @@
+# ==========================================
+# SportsVision AI Configuration
+# ==========================================
+
+# Hardware & Inference Device
+device: "cuda"  # "cuda" or "cpu" (auto-falls back if cuda unavailable)
+
+# Detection Model Settings
+detection:
+  model_path: "models/weights/yolov8n.pt"  # Auto-downloads if not found
+  confidence_threshold: 0.30
+  iou_threshold: 0.45
+  target_classes:
+    0: "player"
+    32: "ball"
+  img_size: 640
+
+# Preprocessing Settings
+preprocessing:
+  target_size: [720, 1280]  # [height, width] or null to preserve original
+  color_space: "RGB"
+  normalize: false
+
+# Tracking Settings (Phase 2+)
+tracking:
+  tracker_type: "bytetrack"
+  track_high_thresh: 0.5
+  track_low_thresh: 0.1
+  new_track_thresh: 0.6
+  track_buffer: 30
+  match_thresh: 0.8
+
+# Visual Annotation Settings
+visualization:
+  player_box_color: [0, 255, 128]      # BGR: Bright Emerald
+  ball_box_color: [0, 140, 255]        # BGR: Deep Orange
+  referee_box_color: [0, 255, 255]     # BGR: Yellow
+  box_thickness: 2
+  text_thickness: 2
+  font_scale: 0.55
+  show_confidence: true
+  show_center_point: true
+  show_hud: true
+  hud_bg_color: [20, 20, 20]
+  hud_text_color: [255, 255, 255]
+
+# Output Paths
+paths:
+  sample_dir: "data/sample"
+  output_video_dir: "outputs/videos"
+  output_heatmap_dir: "outputs/heatmaps"
+  output_report_dir: "outputs/reports"
