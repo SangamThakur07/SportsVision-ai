@@ -31,6 +31,28 @@ class MovementAnalyzer:
         self.fps = fps if fps > 0 else 25.0
         self.smoothing_window = max(1, smoothing_window)
         self.max_displacement_threshold = max_displacement_threshold
+        self.records: List[Dict[str, Any]] = []
+
+    def update_position(
+        self,
+        track_id: int,
+        x: float,
+        y: float,
+        timestamp: Optional[float] = None,
+        frame_idx: Optional[int] = None
+    ):
+        """Append an instantaneous player tracking coordinate."""
+        if track_id <= 0:
+            return
+        t = timestamp if timestamp is not None else (len(self.records) / self.fps)
+        f = frame_idx if frame_idx is not None else int(round(t * self.fps))
+        self.records.append({
+            "track_id": track_id,
+            "x": float(x),
+            "y": float(y),
+            "timestamp": float(t),
+            "frame_idx": f
+        })
 
     def calculate_player_metrics(
         self,
@@ -158,8 +180,11 @@ class MovementAnalyzer:
 
         return results
 
-    def to_dataframe(self, analyzed_metrics: Dict[int, Dict[str, Any]]) -> pd.DataFrame:
+    def to_dataframe(self, analyzed_metrics: Optional[Dict[int, Dict[str, Any]]] = None) -> pd.DataFrame:
         """Convert player kinematics summary into a clean Pandas DataFrame."""
+        if analyzed_metrics is None:
+            analyzed_metrics = self.analyze_all_players(self.records)
+
         rows = []
         for t_id, m in sorted(analyzed_metrics.items()):
             rows.append({

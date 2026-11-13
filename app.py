@@ -263,9 +263,8 @@ def render_video_analysis():
             # 3. Player Kinematics & Tracking Data
             status_text.text("Calculating player velocity, distance, and kinematics...")
             analyzer = MovementAnalyzer(fps=meta["fps"])
-            for rec in tracker.tracking_history:
-                analyzer.update_position(rec["track_id"], rec["x"], rec["y"], rec["timestamp"])
-            df_kin = analyzer.to_dataframe()
+            player_metrics = analyzer.analyze_all_players(tracker.tracking_history)
+            df_kin = analyzer.to_dataframe(player_metrics)
             os.makedirs("outputs/reports", exist_ok=True)
             df_kin.to_csv("outputs/reports/player_kinematics.csv", index=False)
             pd.DataFrame(tracker.tracking_history).to_csv("outputs/reports/tracking_data.csv", index=False)
