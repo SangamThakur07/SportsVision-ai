@@ -117,11 +117,24 @@ class SportsTracker:
         confidence_threshold: float = 0.30,
         iou_threshold: float = 0.45,
         max_trail_len: int = 30,
-        device: Optional[str] = None
+        device: Optional[str] = None,
+        pitch_roi: Optional[Tuple[float, float, float, float]] = None
     ):
+        """
+        Args:
+            pitch_roi: Optional (x1_pct, y1_pct, x2_pct, y2_pct) in [0.0–1.0] defining
+                       the pitch boundary as a fraction of frame size. Detections whose
+                       bottom-center falls outside this region are discarded (coaches,
+                       cameramen, ball boys at the frame edges).
+                       Default: (0.02, 0.05, 0.98, 0.88) — trims ~12% from the bottom
+                       (dugout/sideline row) and 2% from each horizontal edge.
+        """
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
         self.max_trail_len = max_trail_len
+
+        # Pitch boundary filter (fractions of frame width/height)
+        self.pitch_roi = pitch_roi if pitch_roi is not None else (0.02, 0.05, 0.98, 0.88)
 
         # Device selection
         if device is None:
@@ -207,6 +220,21 @@ class SportsTracker:
                             frame_idx=frame_idx,
                             timestamp=timestamp
                         )
+
+                        # ── Pitch boundary filter ───────────────────────────────────────────────
+                        # Discard detections of coaches, cameramen, and ball boys whose
+                        # feet (bottom_center) land outside the visible pitch rectangle.
+                        # roi = (x1%, y1%, x2%, y2%) as fractions of frame dimensions.
+                        h_frame, w_frame = frame.shape[:2]
+                        roi_x1 = self.pitch_roi[0] * w_frame
+                        roi_y1 = self.pitch_roi[1] * h_frame
+                        roi_x2 = self.pitch_roi[2] * w_frame
+                        roi_y2 = self.pitch_roi[3] * h_frame
+                        bx, by = player.bottom_center
+                        if not (roi_x1 <= bx <= roi_x2 and roi_y1 <= by <= roi_y2):
+                            continue   # Outside pitch → skip (coach / cameraman)
+                        # ────────────────────────────────────────────────────────────────────────
+
                         tracked_players.append(player)
 
                         # Update player trajectory trail (feet position on pitch)

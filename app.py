@@ -171,6 +171,14 @@ def render_video_analysis():
 
     with col2:
         conf_thresh = st.slider("Detection Confidence Threshold", 0.15, 0.80, 0.30, 0.05, help="Minimum confidence for player and ball detection boxes")
+        st.markdown("**🟩 Pitch Boundary Filter** — excludes sideline staff")
+        pitch_bottom = st.slider(
+            "Bottom cutoff (% from top)",
+            min_value=70, max_value=100, value=88, step=1,
+            help="Detections below this % of frame height are treated as coaches/cameramen/ball boys and ignored. Lower value = stricter filtering."
+        )
+        pitch_roi = (0.02, 0.05, 0.98, pitch_bottom / 100.0)
+        st.caption(f"🟩 Pitch zone: top 5% → {pitch_bottom}% of frame height. Persons below the cutoff (coaches, cameramen, ball boys) are excluded from tracking.")
         duration_choice = st.selectbox(
             "Analysis Duration (Length of Output)",
             [
@@ -228,7 +236,7 @@ def render_video_analysis():
             progress_bar = st.progress(0.0)
             status_text = st.empty()
 
-            tracker = SportsTracker(confidence_threshold=conf_thresh, device="cpu")
+            tracker = SportsTracker(confidence_threshold=conf_thresh, device="cpu", pitch_roi=pitch_roi)
             classifier = TeamClassifier(num_teams=2, device="cpu")
             annotator = Annotator(show_hud=True, show_trajectories=True)
             possession_est = PossessionEstimator(proximity_threshold_px=80.0)
