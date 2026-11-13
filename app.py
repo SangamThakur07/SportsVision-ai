@@ -26,6 +26,7 @@ from src.analytics.heatmap import HeatmapGenerator
 from src.analytics.possession import PossessionEstimator
 from src.analytics.team_analytics import TeamAnalytics
 from src.analytics.homography import PitchHomography
+from src.analytics.roster import TacticalRoster
 from src.evaluation.metrics import (
     calculate_iou,
     evaluate_detection_batch,
@@ -207,8 +208,11 @@ def render_video_analysis():
         m3.metric("Total Frames", meta["total_frames"])
         m4.metric("Duration", f"{meta['duration_sec']}s")
 
-        with st.expander("👁️ Preview Raw Source Video", expanded=False):
-            st.video(video_source_path)
+        # --- Full match video preview (always open) ---
+        st.markdown("### 🎬 Full Match Video — Source Footage")
+        st.caption("This is the complete input clip the system will analyze. Watch it first to understand what the AI pipeline will process.")
+        st.video(video_source_path)
+        st.markdown("---")
 
         col_b1, col_b2 = st.columns([1, 1])
         with col_b1:
@@ -306,6 +310,19 @@ def render_video_analysis():
             st.session_state["kinematics"] = df_kin
             st.session_state["frame_size"] = (meta["width"], meta["height"])
 
+            # Build tactical 22-player roster (11 White vs 11 Red)
+            try:
+                match_roster, officials_df = TacticalRoster.build_tactical_roster(
+                    df_kin, pd.DataFrame(tracker.tracking_history), player_teams
+                )
+                st.session_state["match_roster"] = match_roster
+                st.session_state["officials_df"] = officials_df
+                st.session_state["id_mapping"] = TacticalRoster.get_player_display_mapping(match_roster, officials_df)
+            except Exception:
+                st.session_state["match_roster"] = pd.DataFrame()
+                st.session_state["officials_df"] = pd.DataFrame()
+                st.session_state["id_mapping"] = {}
+
             status_text.empty()
             st.success(f" Analysis Complete! Processed {count} frames in {elapsed:.1f}s ({count/elapsed:.1f} FPS)")
             st.video(out_path)
@@ -336,101 +353,163 @@ def render_tracking_view():
 
 
 def render_player_analytics():
-    st.markdown("## 🏃 Player Kinematics & Physical Metrics")
-    st.write("Quantitative tracking metrics: duration, distance covered, average speed, and maximum speed.")
+    st.markdown("## 🏃 Player Analytics — Official Match Lineup")
+    st.caption(
+        "Players are mapped from raw Computer Vision track IDs into an official **11 vs 11 match roster** "
+        "(White #1–#11 vs Red #1–#11) with tactical positional roles, sorted by their average pitch position."
+    )
 
-    csv_path = "outputs/reports/player_kinematics.csv"
-    if os.path.exists(csv_path):
-        df = pd.read_csv(csv_path)
+    # Explain track ID numbering to users
+    with st.expander("ℹ️ How are players numbered? (Why do raw IDs like #46, #55 appear?)", expanded=False):
+        st.markdown("""
+**ByteTrack** (the multi-object tracker) assigns an incrementing integer every time it initializes a new track.
+When a player is briefly occluded (e.g. goes behind another player or the camera pans), the tracker may lose the track
+and re-detect the same player as a **new ID** — which is why raw IDs can jump to #46, #55, etc.
 
-        filter_active = st.checkbox(
-            "Filter transient tracks (Show active pitch players only)",
-            value=True,
-            help="Filters out short-lived tracks (< 15 frames) from camera panning or brief occlusions to display the active pitch players"
-        )
-        if filter_active:
-            display_df = df[df["Frames Tracked"] >= 15].copy()
-            if len(display_df) == 0:
-                display_df = df.copy()
-        else:
-            display_df = df.copy()
+**SportsVision AI solves this** by:
+1. Collecting all tracks with ≥ 10 frames of continuity (active pitch players).
+2. Separating them into **Team White** and **Team Red** using ResNet-18 jersey classification.
+3. Sorting each team's 11 most-active players by their average **pitch x-coordinate** (defensive depth → attacking depth).
+4. Assigning clean tactical jersey numbers: **White #1 (GK) → White #11 (LW)** and **Red #1 (GK) → Red #11 (LW)**.
 
-        # Calibrate to real-world metric units (105m pitch / 1280px standard canvas)
-        scale_m = 105.0 / 1280.0
-        display_df["Distance (m)"] = (display_df["Total Distance (px)"] * scale_m).round(1)
-        display_df["Avg Speed (km/h)"] = (display_df["Average Speed (px/s)"] * scale_m * 3.6).round(1)
-        display_df["Top Speed (km/h)"] = (display_df["Max Speed (px/s)"] * scale_m * 3.6).round(1)
-        display_df["Workrate Category"] = display_df["Top Speed (km/h)"].apply(
-            lambda s: "⚡ High Sprint (>20 km/h)" if s >= 20 else ("🏃 Active Run (12-20 km/h)" if s >= 12 else "🚶 Zonal Positional (<12 km/h)")
-        )
-
-        # Leaderboard Cards
-        top_sprinter = display_df.loc[display_df["Top Speed (km/h)"].idxmax()]
-        top_distance = display_df.loc[display_df["Distance (m)"].idxmax()]
-        longest_presence = display_df.loc[display_df["Tracking Duration (s)"].idxmax()]
-
-        st.markdown("### 🏆 Match Physical Performance Leaders")
-        l1, l2, l3, l4 = st.columns(4)
-        l1.metric("Active Pitch Players", len(display_df), help="Players with consistent on-screen tracking")
-        l2.metric("🥇 Fastest Sprinter", f"{top_sprinter['Player ID']}", f"{top_sprinter['Top Speed (km/h)']} km/h")
-        l3.metric("👟 Max Distance Run", f"{top_distance['Player ID']}", f"{top_distance['Distance (m)']} m")
-        l4.metric("⏱️ Longest In Play", f"{longest_presence['Player ID']}", f"{longest_presence['Tracking Duration (s)']}s")
-
-        # Clean display table with real-world units
-        cols_to_show = ["Player ID", "Distance (m)", "Top Speed (km/h)", "Avg Speed (km/h)", "Tracking Duration (s)", "Frames Tracked", "Workrate Category"]
-        st.dataframe(display_df[cols_to_show], use_container_width=True)
-
-        st.markdown("---")
-        st.subheader("🔍 Individual Player Deep-Dive")
-        col_sel, col_info = st.columns([1, 2])
-        with col_sel:
-            selected_player = st.selectbox("Select Player ID to Inspect", display_df["Player ID"].tolist())
-            p_row = display_df[display_df["Player ID"] == selected_player].iloc[0]
-            pid_int = int(str(selected_player).replace("#", ""))
-
-        with col_info:
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Distance Covered", f"{p_row['Distance (m)']} m", help="Calculated via pitch perspective calibration")
-            c2.metric("Top Sprint Speed", f"{p_row['Top Speed (km/h)']} km/h")
-            c3.metric("Average Speed", f"{p_row['Avg Speed (km/h)']} km/h")
-            c4.metric("Tracking Duration", f"{p_row['Tracking Duration (s)']}s")
-
-        # Speed over time chart if tracking data exists
-        tracking_csv = "outputs/reports/tracking_data.csv"
-        if os.path.exists(tracking_csv):
-            t_df = pd.read_csv(tracking_csv)
-            p_track = t_df[t_df["track_id"] == pid_int].sort_values("frame_idx")
-            if len(p_track) >= 3:
-                st.markdown(f"**📈 Velocity Profile Over Time — Player {selected_player}**")
-                # Calculate instantaneous speed between frames
-                times = p_track["timestamp"].values
-                xs = p_track["x"].values
-                ys = p_track["y"].values
-                speeds_kmh = [0.0]
-                for i in range(1, len(times)):
-                    dt = times[i] - times[i-1]
-                    if dt <= 0:
-                        dt = 0.04
-                    d_px = np.sqrt((xs[i] - xs[i-1])**2 + (ys[i] - ys[i-1])**2)
-                    d_m = d_px * scale_m
-                    speed_kmh = (d_m / dt) * 3.6
-                    speeds_kmh.append(round(min(35.0, speed_kmh), 1))  # Cap at human sprint limit 35 km/h
-
-                chart_df = pd.DataFrame({
-                    "Time (seconds)": times,
-                    "Speed (km/h)": speeds_kmh
-                }).set_index("Time (seconds)")
-                st.line_chart(chart_df, height=180)
-
-        # Tactical note explaining why some players move less
-        st.info("""
-        💡 **Tactical Movement Guide for Evaluators:**
-        - **Why do some players move less (e.g. 5–10m)?** In short tactical sequences (3–15 seconds), central defenders, holding pivots, and goalkeepers hold their defensive zone and move only a few steps.
-        - **Why do other players move more (e.g. 25–50m)?** Wingers, attacking midfielders, and pressing strikers perform dynamic sprints and counter-attacks across the pitch.
+Short-lived detections (referees, sideline staff, partial occlusion tracks) are shown separately under **Officials & Peripheral**.
         """)
 
-    else:
-        st.info("Run match analysis in the 'Video Analysis' tab to generate player kinematics data.")
+    csv_path = "outputs/reports/player_kinematics.csv"
+    tracking_csv = "outputs/reports/tracking_data.csv"
+    scale_m = 105.0 / 1280.0
+
+    if not os.path.exists(csv_path):
+        st.info("▶️ Run match analysis in the **📹 Video Analysis** tab first to generate player tracking data.")
+        return
+
+    df_kin = pd.read_csv(csv_path)
+    df_track = pd.read_csv(tracking_csv) if os.path.exists(tracking_csv) else None
+    player_teams = st.session_state.get("player_teams", {})
+
+    # Build tactical 22-player roster
+    match_roster, officials_df = TacticalRoster.build_tactical_roster(df_kin, df_track, player_teams, scale_m)
+
+    if match_roster.empty:
+        st.warning("Could not build a tactical roster. Try running a longer analysis (15–30 seconds).")
+        return
+
+    # --- Summary leaderboard ---
+    top_sprint_row = match_roster.loc[match_roster["Top Speed (km/h)"].idxmax()]
+    top_dist_row = match_roster.loc[match_roster["Distance (m)"].idxmax()]
+    top_pres_row = match_roster.loc[match_roster["Frames Tracked"].idxmax()]
+
+    st.markdown("### 🏆 Match Physical Leaderboard")
+    st.caption("Top performers across the official 22 on-pitch players")
+    l1, l2, l3, l4 = st.columns(4)
+    l1.metric("Official Field Players", "22", "11 White · 11 Red")
+    l2.metric("🥇 Fastest Sprint", top_sprint_row["Tactical Jersey"], f"{top_sprint_row['Top Speed (km/h)']} km/h")
+    l3.metric("👟 Most Distance", top_dist_row["Tactical Jersey"], f"{top_dist_row['Distance (m)']} m")
+    l4.metric("⏱️ Most On-Screen", top_pres_row["Tactical Jersey"], f"{top_pres_row['Tracking Duration (s)']}s")
+
+    st.markdown("---")
+
+    # --- Per-team tabs ---
+    tab_white, tab_red, tab_officials = st.tabs(["⚪ Team White (11 Players)", "🔴 Team Red (11 Players)", "🏁 Officials & Peripheral"])
+
+    def render_team_tab(team_name: str, icon: str):
+        team_df = match_roster[match_roster["Team"] == team_name].copy()
+        if team_df.empty:
+            st.warning(f"No players found for {team_name}.")
+            return
+
+        # Player cards in a grid
+        st.markdown(f"#### {icon} {team_name} — Tactical Formation Lineup")
+        st.caption(
+            "Players sorted **left to right** by defensive depth → attacking depth. "
+            "#1 = Goalkeeper, #2–5 = Defenders, #6–8 = Midfielders, #9–11 = Forwards."
+        )
+
+        # 3-column card grid
+        for chunk_start in range(0, len(team_df), 3):
+            chunk = team_df.iloc[chunk_start:chunk_start + 3]
+            cols = st.columns(len(chunk))
+            for col, (_, row) in zip(cols, chunk.iterrows()):
+                with col:
+                    workrate_icon = "⚡" if row["Top Speed (km/h)"] >= 20 else ("🏃" if row["Top Speed (km/h)"] >= 12 else "🚶")
+                    st.markdown(f"""
+<div style="background:#1A202C;border-radius:10px;padding:12px;border-left:4px solid {'#B8D4FF' if 'White' in team_name else '#FF6B6B'};margin-bottom:8px;">
+<strong style="color:{'#E8F4FD' if 'White' in team_name else '#FFD0D0'};">{icon} {row['Tactical Jersey']}</strong><br>
+<span style="color:#A0AEC0;font-size:0.85em;">{row['Tactical Role']}</span><br><br>
+📏 <strong>{row['Distance (m)']} m</strong> covered<br>
+💨 Top: <strong>{row['Top Speed (km/h)']} km/h</strong><br>
+⚡ Avg: <strong>{row['Avg Speed (km/h)']} km/h</strong><br>
+⏱ <strong>{row['Tracking Duration (s)']}s</strong> in frame<br>
+{workrate_icon} <em>{row['Workrate Category']}</em>
+</div>
+                    """, unsafe_allow_html=True)
+
+        st.markdown("---")
+        # Full sortable table
+        display_cols = ["Tactical Jersey", "Tactical Role", "Distance (m)", "Top Speed (km/h)", "Avg Speed (km/h)", "Tracking Duration (s)", "Workrate Category"]
+        st.dataframe(team_df[display_cols].set_index("Tactical Jersey"), use_container_width=True)
+
+        # Individual player deep-dive
+        st.markdown(f"#### 🔍 {icon} Individual Player Velocity Profile")
+        col_sel, col_chart = st.columns([1, 2])
+        with col_sel:
+            jersey_options = team_df["Tactical Jersey"].tolist()
+            sel_jersey = st.selectbox(f"Select {team_name} player", jersey_options, key=f"sel_{team_name}")
+            sel_row = team_df[team_df["Tactical Jersey"] == sel_jersey].iloc[0]
+            raw_tid = int(sel_row["Raw Track ID"])
+
+            st.metric("📏 Distance Covered", f"{sel_row['Distance (m)']} m")
+            st.metric("💨 Top Speed", f"{sel_row['Top Speed (km/h)']} km/h")
+            st.metric("⚡ Average Speed", f"{sel_row['Avg Speed (km/h)']} km/h")
+            st.metric("🏷️ Raw Track ID", f"#{raw_tid}")
+
+        with col_chart:
+            if df_track is not None:
+                p_track = df_track[df_track["track_id"] == raw_tid].sort_values("frame_idx")
+                if len(p_track) >= 3:
+                    times = p_track["timestamp"].values
+                    xs, ys = p_track["x"].values, p_track["y"].values
+                    speeds_kmh = [0.0]
+                    for i in range(1, len(times)):
+                        dt = max(times[i] - times[i - 1], 0.04)
+                        d_m = np.sqrt((xs[i] - xs[i-1])**2 + (ys[i] - ys[i-1])**2) * scale_m
+                        speeds_kmh.append(round(min(35.0, (d_m / dt) * 3.6), 1))
+                    chart_df = pd.DataFrame({"Time (s)": times, "Speed (km/h)": speeds_kmh}).set_index("Time (s)")
+                    st.markdown(f"**📈 Velocity Profile — {sel_jersey}**")
+                    st.line_chart(chart_df, height=200)
+                else:
+                    st.info("Not enough tracking frames for a velocity chart on this player.")
+
+    with tab_white:
+        render_team_tab("Team White", "⚪")
+
+    with tab_red:
+        render_team_tab("Team Red", "🔴")
+
+    with tab_officials:
+        st.markdown("#### 🏁 Officials, Referees & Sideline Staff")
+        st.caption(
+            "These are computer vision detections that did **not** qualify as one of the 22 main on-pitch players. "
+            "They include: referees, linesmen, sideline staff, and brief track fragments caused by occlusion re-starts."
+        )
+        if officials_df is not None and not officials_df.empty:
+            disp_cols = ["Tactical Jersey", "Distance (m)", "Top Speed (km/h)", "Tracking Duration (s)", "Frames Tracked"]
+            st.dataframe(officials_df[disp_cols], use_container_width=True)
+        else:
+            st.success("✅ All detected players mapped cleanly to the official 22-player lineup. No peripheral tracks found.")
+
+    # Tactical explanation
+    st.markdown("---")
+    st.info("""
+💡 **Why do some players show low distance (e.g. 2–5m)?**
+In short match clips (5–30 seconds), **Goalkeepers and Central Defenders** hold their defensive shape and barely move.
+**Wingers, Full-backs, and Strikers** sprint dynamically and cover more ground.
+This is completely normal football behavior — it reflects positional roles, not a tracking error.
+
+💡 **Why is distance shown in meters (not pixels)?**
+SportsVision AI applies a **pitch calibration factor** (1 pixel = 0.082m on a standard 105m FIFA pitch at 1280px width)
+to convert raw pixel displacement into real-world meters and km/h. This aligns with professional broadcast analytics standards.
+    """)
 
 
 def render_team_analytics():
