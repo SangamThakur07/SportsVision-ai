@@ -152,7 +152,7 @@ def render_video_analysis():
     st.write("Upload a football match clip or analyze the included sample footage.")
 
     # Defaults (always defined so they are in scope even if col2 widget hasn't been rendered yet)
-    pitch_roi = (0.02, 0.05, 0.98, 0.88)
+    pitch_roi = (0.01, 0.15, 0.99, 0.78)
     conf_thresh = 0.30
     max_frames_to_run = 375
 
@@ -179,11 +179,11 @@ def render_video_analysis():
         st.markdown("**🟩 Pitch Boundary Filter** — excludes sideline staff")
         pitch_bottom = st.slider(
             "Bottom cutoff (% from top)",
-            min_value=70, max_value=100, value=88, step=1,
-            help="Detections below this % of frame height are treated as coaches/cameramen/ball boys and ignored. Lower value = stricter filtering."
+            min_value=65, max_value=95, value=78, step=1,
+            help="Detections below this % of frame height are treated as coaches/cameramen/ball boys and ignored. 78% cleanly removes all bottom sideline personnel."
         )
-        pitch_roi = (0.02, 0.05, 0.98, pitch_bottom / 100.0)
-        st.caption(f"🟩 Pitch zone: top 5% → {pitch_bottom}% of frame height. Persons below the cutoff (coaches, cameramen, ball boys) are excluded from tracking.")
+        pitch_roi = (0.01, 0.15, 0.99, pitch_bottom / 100.0)
+        st.caption(f"🟩 Pitch zone: top 15% → {pitch_bottom}% of frame height. Sideline coaches & cameramen below {pitch_bottom}% are excluded from tracking.")
         duration_choice = st.selectbox(
             "Analysis Duration (Length of Output)",
             [

@@ -134,7 +134,9 @@ class SportsTracker:
         self.max_trail_len = max_trail_len
 
         # Pitch boundary filter (fractions of frame width/height)
-        self.pitch_roi = pitch_roi if pitch_roi is not None else (0.02, 0.05, 0.98, 0.88)
+        # Default: (0.01, 0.15, 0.99, 0.78) — strictly isolates the active pitch rectangle,
+        # discarding coaches, substitutes, photographers, and cameramen standing below the touchline (>78%).
+        self.pitch_roi = pitch_roi if pitch_roi is not None else (0.01, 0.15, 0.99, 0.78)
 
         # Device selection
         if device is None:
