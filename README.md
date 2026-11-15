@@ -87,8 +87,8 @@ This project directly maps to the core units of the Computer Vision and Deep Lea
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/sportsvision-ai.git
-cd sportsvision-ai
+git clone https://github.com/SangamThakur07/SportsVision-ai.git
+cd SportsVision-ai
 
 # Install dependencies
 pip install -r requirements.txt
@@ -99,7 +99,7 @@ streamlit run app.py
 # Or Run Standalone CLI Pipeline (Tracking + Analytics)
 python run_pipeline.py --input data/sample/synthetic_match.mp4 --output outputs/videos/output_analytics.mp4 --mode tracking
 
-# Run Full Test Suite (14 Tests)
+# Run Full Test Suite (19 Tests Passing)
 pytest tests/ -v
 ```
 
@@ -107,15 +107,14 @@ pytest tests/ -v
 
 ## 4. Streamlit Dashboard Features
 
-The web interface is divided into 8 distinct analytical views:
-1. **Home**: Architecture breakdown, tech stack summary, and preview.
-2. **Video Analysis**: Video uploader with live processing progress bar and FPS counter.
-3. **Tracking & Detection**: Frame inspection displaying persistent IDs, motion trails, and ball flight paths.
-4. **Player Analytics**: Interactive player kinematics table with speed, distance covered, and tracking duration.
-5. **Team & Possession**: Possession share breakdown (cards and bar charts) and team centroid information.
-6. **Movement Heatmaps**: 2D Gaussian density estimation overlaid on a calibrated football pitch.
-7. **Model Evaluation**: Precision, Recall, mAP, IoU, and ResNet-18 vs HSV Color Histogram benchmark.
-8. **Viva & Methodology**: Academic viva revision guide explaining core Computer Vision concepts.
+The web interface is divided into 7 distinct analytical views:
+1. **🏠 Home**: Architecture breakdown, tech stack summary, live demo video, and pipeline guide.
+2. **📹 Video Analysis**: Full match input video preview player, pitch boundary ROI slider to exclude sideline staff, duration selectors (5s, 15s, 30s full), and processing progress bar.
+3. **🎯 Tracking & Detection**: Frame inspection displaying persistent IDs, motion trails, raw coordinate data table, and tracking video playback.
+4. **🏃 Player Analytics**: Official **22-player match lineup (11 White vs 11 Red)** with tactical roles (`#1 GK` to `#11 ST`), metric conversion (meters & km/h), physical workrate categories, and interactive per-player velocity profile graphs.
+5. **👥 Team & Possession**: Possession dominance breakdown, team centroid formations, formation spread (m), and pitch territory area (m²).
+6. **🔥 Movement Heatmaps**: 2D Gaussian density estimation overlaid on a calibrated football pitch (Full match, individual corridor, team density).
+7. **📊 Model Evaluation**: Precision, Recall, mAP, IoU, ResNet-18 vs HSV Color Histogram benchmark, and Grad-CAM Explainable AI saliency maps.
 
 ---
 
