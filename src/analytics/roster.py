@@ -165,6 +165,17 @@ class TacticalRoster:
                 overflow["Raw Track ID"] = overflow["track_id"]
                 officials_list.append(overflow)
 
+        # Explicitly capture any tracks labeled as Referee or non-team
+        non_team_df = df[~df["Team"].isin(["Team White", "Team Red"])].copy()
+        if not non_team_df.empty:
+            non_team_df = non_team_df.reset_index(drop=True)
+            non_team_df["Tactical Jersey"] = [f"Match Referee #{i+1}" for i in range(len(non_team_df))]
+            non_team_df["Tactical Role"] = "Match Official / Referee"
+            non_team_df["Role Abbr"] = "REF"
+            non_team_df["Jersey Number"] = list(range(1, 1 + len(non_team_df)))
+            non_team_df["Raw Track ID"] = non_team_df["track_id"]
+            officials_list.append(non_team_df)
+
         match_roster = pd.concat(match_roster_list, ignore_index=True) if match_roster_list else pd.DataFrame()
 
         # Handle officials (detect tracks that don't belong to either team or extra tracks)
