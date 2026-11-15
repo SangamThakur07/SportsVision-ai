@@ -151,6 +151,11 @@ def render_video_analysis():
     st.markdown("## 📹 Video Analysis Pipeline")
     st.write("Upload a football match clip or analyze the included sample footage.")
 
+    # Defaults (always defined so they are in scope even if col2 widget hasn't been rendered yet)
+    pitch_roi = (0.02, 0.05, 0.98, 0.88)
+    conf_thresh = 0.30
+    max_frames_to_run = 375
+
     col1, col2 = st.columns([2, 1])
     with col1:
         uploaded_file = st.file_uploader("Upload Football Video (.mp4 / .avi)", type=["mp4", "avi"])
@@ -236,7 +241,11 @@ def render_video_analysis():
             progress_bar = st.progress(0.0)
             status_text = st.empty()
 
-            tracker = SportsTracker(confidence_threshold=conf_thresh, device="cpu", pitch_roi=pitch_roi)
+            try:
+                tracker = SportsTracker(confidence_threshold=conf_thresh, device="cpu", pitch_roi=pitch_roi)
+            except TypeError:
+                # Fallback: older tracker.py without pitch_roi parameter
+                tracker = SportsTracker(confidence_threshold=conf_thresh, device="cpu")
             classifier = TeamClassifier(num_teams=2, device="cpu")
             annotator = Annotator(show_hud=True, show_trajectories=True)
             possession_est = PossessionEstimator(proximity_threshold_px=80.0)
