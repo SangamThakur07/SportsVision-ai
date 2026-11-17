@@ -775,6 +775,37 @@ def render_evaluation():
     if os.path.exists("outputs/heatmaps/gradcam_explanation.png"):
         st.image("outputs/heatmaps/gradcam_explanation.png", caption="Grad-CAM demonstrates focus on jersey torso rather than background grass", use_container_width=True)
 
+    st.markdown("---")
+    st.subheader("4. 📄 IEEE Conference Research Paper & Technical Report")
+    st.caption("Authored by Sangam Thakur (12403852) & Viren (12409626), Lovely Professional University (LPU).")
+
+    paper_md_path = "SportsVision_AI_IEEE_Paper.md"
+    paper_html_path = "SportsVision_AI_IEEE_Paper.html"
+
+    p_col1, p_col2 = st.columns(2)
+    with p_col1:
+        if os.path.exists(paper_md_path):
+            with open(paper_md_path, "r", encoding="utf-8") as f:
+                md_content = f.read()
+            st.download_button(
+                label="📥 Download IEEE Paper (.md)",
+                data=md_content,
+                file_name="SportsVision_AI_IEEE_Paper.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+    with p_col2:
+        if os.path.exists(paper_html_path):
+            with open(paper_html_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+            st.download_button(
+                label="🖨️ Download Printable PDF/HTML (.html)",
+                data=html_content,
+                file_name="SportsVision_AI_IEEE_Paper.html",
+                mime="text/html",
+                use_container_width=True
+            )
+
 
 if __name__ == "__main__":
     main()
