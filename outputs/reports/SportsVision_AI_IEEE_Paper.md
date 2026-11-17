@@ -1,8 +1,13 @@
 # SportsVision AI: Computer Vision and Deep Learning Pipeline for Multi-Object Tracking, Tactical Roster Normalization, and Spatial Kinematics in Broadcast Football Videos
 
-**Sangam Thakur**  
-*Department of Computer Science & Engineering*  
-*SportsVision AI Project Repository: [GitHub](https://github.com/SangamThakur07/SportsVision-ai.git)*  
+| **Sangam Thakur** | **Viren** |
+| :---: | :---: |
+| *Registration No: 12403852* | *Registration No: 12409626* |
+| *Department of Computer Science & Engineering* | *Department of Computer Science & Engineering* |
+| *Lovely Professional University* | *Lovely Professional University* |
+| *Punjab, India* | *Punjab, India* |
+
+**Project Code & Live Deployment Repository**: [https://github.com/SangamThakur07/SportsVision-ai.git](https://github.com/SangamThakur07/SportsVision-ai.git)  
 
 ---
 
@@ -235,7 +240,7 @@ Future work will focus on integrating automated camera calibration via homograph
 ---
 
 ## Acknowledgment
-The authors acknowledge the open-source computer vision and deep learning research communities behind Ultralytics YOLOv8, ByteTrack, PyTorch, and OpenCV, whose foundational architectures enabled this research.
+The authors express their sincere gratitude to the Department of Computer Science & Engineering, Lovely Professional University, Punjab, India, for providing the computational infrastructure, academic mentorship, and support throughout the design and implementation of this capstone research project. The authors also acknowledge the open-source computer vision and deep learning research communities behind Ultralytics YOLOv8, ByteTrack, PyTorch, and OpenCV.
 
 ---
 
@@ -261,6 +266,6 @@ The authors acknowledge the open-source computer vision and deep learning resear
 
 [10] M. Manafifard, H. Ebadi, and H. A. Moghaddam, "A survey on player tracking in soccer videos," *Computer Vision and Image Understanding*, vol. 159, pp. 19–46, June 2017.
 
-[11] S. Thakur, "SportsVision AI: AI-based sports analytics system using computer vision and deep learning," GitHub repository, 2026. [Online]. Available: https://github.com/SangamThakur07/SportsVision-ai.git
+[11] S. Thakur and Viren, "SportsVision AI: AI-based sports analytics system using computer vision and deep learning," Lovely Professional University, GitHub repository, 2026. [Online]. Available: https://github.com/SangamThakur07/SportsVision-ai.git
 
 [12] J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, "You only look once: Unified, real-time object detection," in *Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2016, pp. 779–788.
