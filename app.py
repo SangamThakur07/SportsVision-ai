@@ -779,8 +779,8 @@ def render_evaluation():
     st.subheader("4. 📄 IEEE Conference Research Paper & Technical Report")
     st.caption("Authored by Sangam Thakur (12403852) & Viren (12409626), Lovely Professional University (LPU).")
 
-    paper_md_path = "SportsVision_AI_IEEE_Paper.md"
-    paper_html_path = "SportsVision_AI_IEEE_Paper.html"
+    paper_md_path = "SportsVision_AI_Full_Report.md" if os.path.exists("SportsVision_AI_Full_Report.md") else "SportsVision_AI_IEEE_Paper.md"
+    paper_html_path = "SportsVision_AI_Full_Report.html" if os.path.exists("SportsVision_AI_Full_Report.html") else "SportsVision_AI_IEEE_Paper.html"
 
     p_col1, p_col2 = st.columns(2)
     with p_col1:
@@ -788,9 +788,9 @@ def render_evaluation():
             with open(paper_md_path, "r", encoding="utf-8") as f:
                 md_content = f.read()
             st.download_button(
-                label="📥 Download IEEE Paper (.md)",
+                label="📥 Download Full 10-Page IEEE Paper (.md)",
                 data=md_content,
-                file_name="SportsVision_AI_IEEE_Paper.md",
+                file_name="SportsVision_AI_Full_Report.md",
                 mime="text/markdown",
                 use_container_width=True
             )
@@ -799,9 +799,9 @@ def render_evaluation():
             with open(paper_html_path, "r", encoding="utf-8") as f:
                 html_content = f.read()
             st.download_button(
-                label="🖨️ Download Printable PDF/HTML (.html)",
+                label="🖨️ Download Printable PDF/HTML Report (.html)",
                 data=html_content,
-                file_name="SportsVision_AI_IEEE_Paper.html",
+                file_name="SportsVision_AI_Full_Report.html",
                 mime="text/html",
                 use_container_width=True
             )
