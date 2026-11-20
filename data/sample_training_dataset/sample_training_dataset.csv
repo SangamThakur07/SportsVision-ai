@@ -1,0 +1,51 @@
+record_id,frame_idx,timestamp_sec,class_id,class_name,track_id,tactical_jersey,tactical_role,team,bbox_x1,bbox_y1,bbox_x2,bbox_y2,bbox_norm_cx,bbox_norm_cy,bbox_norm_w,bbox_norm_h,ground_x_px,ground_y_px,pitch_x_m,pitch_y_m,speed_kmh,distance_m,workrate_category,detection_confidence,is_on_pitch,pitch_roi_valid
+1,0,0.0,0,Player,3,White #1 (GK),Goalkeeper,Team White,124.0,285.0,156.0,360.0,0.1094,0.4479,0.025,0.1042,140.0,360.0,11.48,34.0,3.1,0.4,🚶 Positional Zone,0.81,True,True
+2,0,0.0,0,Player,27,White #2 (RB),Right Back,Team White,304.0,505.0,336.0,580.0,0.25,0.7535,0.025,0.1042,320.0,580.0,26.25,54.78,8.4,2.5,🏃 Active Running,0.9,True,True
+3,0,0.0,0,Player,15,White #3 (CB),Center Back,Team White,264.0,345.0,296.0,420.0,0.2188,0.5312,0.025,0.1042,280.0,420.0,22.97,39.67,4.2,0.8,🚶 Positional Zone,0.78,True,True
+4,0,0.0,0,Player,25,White #4 (CB),Center Back,Team White,274.0,235.0,306.0,310.0,0.2266,0.3785,0.025,0.1042,290.0,310.0,23.79,29.28,3.9,0.7,🚶 Positional Zone,0.88,True,True
+5,0,0.0,0,Player,1,White #5 (LB),Left Back,Team White,294.0,65.0,326.0,140.0,0.2422,0.1424,0.025,0.1042,310.0,140.0,25.43,13.22,7.9,2.2,🏃 Active Running,0.79,True,True
+6,0,0.0,0,Player,29,White #6 (CDM),Defensive Midfielder,Team White,464.0,285.0,496.0,360.0,0.375,0.4479,0.025,0.1042,480.0,360.0,39.38,34.0,6.8,1.8,🏃 Active Running,0.92,True,True
+7,0,0.0,0,Player,7,White #7 (RM),Right Midfielder,Team White,604.0,515.0,636.0,590.0,0.4844,0.7674,0.025,0.1042,620.0,590.0,50.86,55.72,10.1,3.2,⚡ High Sprint,0.85,True,True
+8,0,0.0,0,Player,21,White #8 (CM),Central Midfielder,Team White,564.0,285.0,596.0,360.0,0.4531,0.4479,0.025,0.1042,580.0,360.0,47.58,34.0,8.2,2.7,🏃 Active Running,0.84,True,True
+9,0,0.0,0,Player,5,White #9 (ST),Center Forward,Team White,824.0,305.0,856.0,380.0,0.6562,0.4757,0.025,0.1042,840.0,380.0,68.91,35.89,11.2,3.4,⚡ High Sprint,0.83,True,True
+10,0,0.0,0,Player,23,White #10 (CAM),Attacking Midfielder,Team White,694.0,275.0,726.0,350.0,0.5547,0.434,0.025,0.1042,710.0,350.0,58.24,33.06,9.5,2.8,⚡ High Sprint,0.86,True,True
+11,0,0.0,0,Player,19,White #11 (LW),Left Winger,Team White,794.0,55.0,826.0,130.0,0.6328,0.1285,0.025,0.1042,810.0,130.0,66.45,12.28,11.8,3.6,⚡ High Sprint,0.82,True,True
+12,0,0.0,0,Player,16,Red #1 (GK),Goalkeeper,Team Red,1124.0,285.0,1156.0,360.0,0.8906,0.4479,0.025,0.1042,1140.0,360.0,93.52,34.0,2.8,0.4,🚶 Positional Zone,0.79,True,True
+13,0,0.0,0,Player,2,Red #2 (RB),Right Back,Team Red,944.0,65.0,976.0,140.0,0.75,0.1424,0.025,0.1042,960.0,140.0,78.75,13.22,7.5,2.1,🏃 Active Running,0.77,True,True
+14,0,0.0,0,Player,4,Red #3 (CB),Center Back,Team Red,984.0,235.0,1016.0,310.0,0.7812,0.3785,0.025,0.1042,1000.0,310.0,82.03,29.28,4.5,0.8,🚶 Positional Zone,0.79,True,True
+15,0,0.0,0,Player,6,Red #4 (CB),Center Back,Team Red,974.0,345.0,1006.0,420.0,0.7734,0.5312,0.025,0.1042,990.0,420.0,81.21,39.67,4.3,0.8,🚶 Positional Zone,0.81,True,True
+16,0,0.0,0,Player,8,Red #5 (LB),Left Back,Team Red,954.0,505.0,986.0,580.0,0.7578,0.7535,0.025,0.1042,970.0,580.0,79.57,54.78,8.1,2.4,🏃 Active Running,0.83,True,True
+17,0,0.0,0,Player,10,Red #6 (CDM),Defensive Midfielder,Team Red,784.0,285.0,816.0,360.0,0.625,0.4479,0.025,0.1042,800.0,360.0,65.62,34.0,7.1,2.0,🏃 Active Running,0.85,True,True
+18,0,0.0,0,Player,12,Red #7 (RM),Right Midfielder,Team Red,644.0,55.0,676.0,130.0,0.5156,0.1285,0.025,0.1042,660.0,130.0,54.14,12.28,9.8,3.0,⚡ High Sprint,0.75,True,True
+19,0,0.0,0,Player,14,Red #8 (CM),Central Midfielder,Team Red,684.0,285.0,716.0,360.0,0.5469,0.4479,0.025,0.1042,700.0,360.0,57.42,34.0,8.6,2.7,🏃 Active Running,0.77,True,True
+20,0,0.0,0,Player,18,Red #9 (ST),Center Forward,Team Red,434.0,265.0,466.0,340.0,0.3516,0.4201,0.025,0.1042,450.0,340.0,36.91,32.11,10.9,3.3,⚡ High Sprint,0.81,True,True
+21,0,0.0,0,Player,20,Red #10 (CAM),Attacking Midfielder,Team Red,554.0,295.0,586.0,370.0,0.4453,0.4618,0.025,0.1042,570.0,370.0,46.76,34.94,9.2,2.8,⚡ High Sprint,0.83,True,True
+22,0,0.0,0,Player,22,Red #11 (LW),Left Winger,Team Red,454.0,515.0,486.0,590.0,0.3672,0.7674,0.025,0.1042,470.0,590.0,38.55,55.72,11.5,3.5,⚡ High Sprint,0.85,True,True
+23,0,0.0,0,Referee,50,Referee #1 (REF),Match Referee,Match Officials,630.0,310.0,655.0,375.0,0.502,0.4757,0.0195,0.0903,642.5,375.0,52.71,35.42,12.4,1.2,🏃 Active Running,0.88,True,True
+24,0,0.0,32,Sports Ball,-1,Ball,Match Ball,Neutral,595.0,365.0,611.0,381.0,0.4711,0.5181,0.0125,0.0222,603.0,381.0,49.46,35.98,32.6,3.4,⚡ High Sprint,0.72,True,True
+25,25,1.0,0,Player,5,White #9 (ST),Center Forward,Team White,859.0,300.0,891.0,375.0,0.6836,0.4688,0.025,0.1042,875.0,375.0,71.78,35.42,25.8,4.8,⚡ High Sprint,0.87,True,True
+26,25,1.0,0,Player,19,White #11 (LW),Left Winger,Team White,834.0,50.0,866.0,125.0,0.6641,0.1215,0.025,0.1042,850.0,125.0,69.73,11.81,26.4,5.2,⚡ High Sprint,0.91,True,True
+27,25,1.0,0,Player,4,Red #3 (CB),Center Back,Team Red,969.0,240.0,1001.0,315.0,0.7695,0.3854,0.025,0.1042,985.0,315.0,80.8,29.75,11.2,1.2,🚶 Positional Zone,0.86,True,True
+28,25,1.0,0,Player,6,Red #4 (CB),Center Back,Team Red,959.0,340.0,991.0,415.0,0.7617,0.5243,0.025,0.1042,975.0,415.0,79.98,39.19,11.5,1.4,🚶 Positional Zone,0.88,True,True
+29,25,1.0,0,Player,23,White #10 (CAM),Attacking Midfielder,Team White,719.0,270.0,751.0,345.0,0.5742,0.4271,0.025,0.1042,735.0,345.0,60.29,32.58,21.1,3.6,⚡ High Sprint,0.85,True,True
+30,25,1.0,0,Player,10,Red #6 (CDM),Defensive Midfielder,Team Red,769.0,280.0,801.0,355.0,0.6133,0.441,0.025,0.1042,785.0,355.0,64.39,33.53,16.2,2.5,🏃 Active Running,0.82,True,True
+31,25,1.0,0,Player,7,White #7 (RM),Right Midfielder,Team White,634.0,505.0,666.0,580.0,0.5078,0.7535,0.025,0.1042,650.0,580.0,53.32,54.78,23.4,4.1,⚡ High Sprint,0.89,True,True
+32,25,1.0,0,Player,14,Red #8 (CM),Central Midfielder,Team Red,669.0,290.0,701.0,365.0,0.5352,0.4549,0.025,0.1042,685.0,365.0,56.19,34.47,18.5,3.2,🏃 Active Running,0.86,True,True
+33,25,1.0,0,Player,21,White #8 (CM),Central Midfielder,Team White,589.0,290.0,621.0,365.0,0.4727,0.4549,0.025,0.1042,605.0,365.0,49.63,34.47,17.8,3.1,🏃 Active Running,0.83,True,True
+34,25,1.0,0,Player,18,Red #9 (ST),Center Forward,Team Red,424.0,270.0,456.0,345.0,0.3438,0.4271,0.025,0.1042,440.0,345.0,36.09,32.58,10.9,1.1,🚶 Positional Zone,0.9,True,True
+35,25,1.0,0,Player,3,White #1 (GK),Goalkeeper,Team White,126.0,285.0,158.0,360.0,0.1109,0.4479,0.025,0.1042,142.0,360.0,11.65,34.0,3.1,0.4,🚶 Positional Zone,0.85,True,True
+36,25,1.0,0,Player,16,Red #1 (GK),Goalkeeper,Team Red,1122.0,285.0,1154.0,360.0,0.8891,0.4479,0.025,0.1042,1138.0,360.0,93.35,34.0,2.8,0.5,🚶 Positional Zone,0.88,True,True
+37,25,1.0,32,Sports Ball,-1,Ball,Match Ball,Neutral,715.0,348.0,731.0,364.0,0.5648,0.4944,0.0125,0.0222,723.0,364.0,59.31,34.38,41.2,12.8,⚡ High Sprint,0.81,True,True
+38,0,0.0,0,Person (Sideline),101,Sideline #1,Dugout Coach,Staff,232.5,565.2,262.5,635.2,0.1934,0.8336,0.0234,0.0972,247.5,635.2,20.3,59.99,0.0,0.0,🚶 Positional Zone,0.65,False,False
+39,0,0.0,0,Person (Sideline),102,Sideline #2,Cameraman / Photographer,Media,519.0,603.5,549.0,673.5,0.4172,0.8868,0.0234,0.0972,534.0,673.5,43.8,63.61,0.0,0.0,🚶 Positional Zone,0.65,False,False
+40,0,0.0,0,Person (Sideline),103,Sideline #3,Ball Boy / Pitch Staff,Staff,849.0,614.0,879.0,684.0,0.675,0.9014,0.0234,0.0972,864.0,684.0,70.88,64.6,0.0,0.0,🚶 Positional Zone,0.65,False,False
+41,0,0.0,0,Person (Sideline),104,Sideline #4,Assistant Referee (Linesman),Officials,1211.7,585.2,1241.7,655.2,0.9584,0.8614,0.0234,0.0972,1226.7,655.2,100.63,61.88,0.0,0.0,🚶 Positional Zone,0.65,False,False
+42,50,2.0,32,Sports Ball,-1,Ball,Match Ball,Neutral,15.0,118.0,31.0,134.0,0.018,0.1764,0.0125,0.0222,23.0,134.0,1.89,12.65,0.0,0.0,🚶 Positional Zone,0.69,True,True
+43,50,2.0,0,Player,7,White #7 (RM),Right Midfielder,Team White,20.0,505.0,52.0,580.0,0.0281,0.7674,0.025,0.1042,36.0,580.0,2.95,54.78,29.1,7.9,⚡ High Sprint,0.84,True,True
+44,50,2.0,0,Player,2,Red #2 (RB),Right Back,Team Red,35.0,65.0,67.0,140.0,0.0398,0.1424,0.025,0.1042,51.0,140.0,4.18,13.22,25.6,6.8,⚡ High Sprint,0.78,True,True
+45,50,2.0,0,Player,19,White #11 (LW),Left Winger,Team White,42.0,51.0,74.0,126.0,0.0453,0.1229,0.025,0.1042,58.0,126.0,4.76,11.9,32.1,8.6,⚡ High Sprint,0.91,True,True
+46,50,2.0,0,Referee,50,Referee #1 (REF),Match Referee,Match Officials,142.0,302.0,167.0,367.0,0.1207,0.4785,0.0195,0.0903,154.5,367.0,12.67,34.65,14.2,2.1,🏃 Active Running,0.86,True,True
+47,75,3.0,32,Sports Ball (Occluded),-1,Ball,Match Ball,Neutral,598.0,348.0,614.0,364.0,0.4773,0.4944,0.0125,0.0222,606.0,364.0,49.72,34.38,0.0,0.0,🚶 Positional Zone,0.41,True,True
+48,75,3.0,0,Player,5,White #9 (ST),Center Forward,Team White,892.0,303.0,924.0,378.0,0.7094,0.4743,0.025,0.1042,908.0,378.0,74.47,35.7,11.2,3.1,🏃 Active Running,0.88,True,True
+49,75,3.0,0,Player,18,Red #9 (ST),Center Forward,Team Red,416.0,273.0,448.0,348.0,0.3313,0.4354,0.025,0.1042,432.0,348.0,35.44,32.87,10.9,2.9,🏃 Active Running,0.82,True,True
+50,75,3.0,0,Player,23,White #10 (CAM),Attacking Midfielder,Team White,751.0,273.0,783.0,348.0,0.5992,0.4354,0.025,0.1042,767.0,348.0,62.93,32.87,21.1,5.6,⚡ High Sprint,0.9,True,True
