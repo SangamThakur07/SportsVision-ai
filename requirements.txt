@@ -1,20 +1,39 @@
-# Core Computer Vision & Deep Learning
-opencv-python-headless>=4.8.0
-ultralytics>=8.0.0
-torch>=2.0.0
-torchvision>=0.15.0
-lapx>=0.5.5
+# ============================================================
+# SportsVision AI — Python Dependencies
+# Lovely Professional University | B.Tech CSE Project
+# Authors: Sangam Thakur (12403852) · Viren (12409626)
+# ============================================================
 
-# Scientific & Data Analysis
-numpy>=1.24.0
-pandas>=2.0.0
-scipy>=1.10.0
-scikit-learn>=1.2.0
+# --- Core Computer Vision & Object Detection ---
+opencv-python-headless>=4.8.0   # Headless OpenCV (no GUI), video I/O, frame processing
+ultralytics>=8.0.0               # YOLOv8 detection + ByteTrack MOT integration
 
-# Visualization & Dashboard
-matplotlib>=3.7.0
-streamlit>=1.30.0
-pyyaml>=6.0
-pillow>=9.5.0
-imageio-ffmpeg>=0.4.0
-gdown>=5.0.0
+# --- Deep Learning Framework ---
+torch>=2.0.0                     # PyTorch tensor ops, autograd, model loading
+torchvision>=0.15.0              # Pre-trained ResNet, image transforms
+
+# --- ByteTrack MOT Solver ---
+lapx>=0.5.5                      # Linear Assignment Problem solver used by ByteTrack
+
+# --- Scientific Computing & Data Analysis ---
+numpy>=1.24.0                    # Array operations, pixel coordinate math
+pandas>=2.0.0                    # Tabular data, CSV/JSON export, tracking records
+scipy>=1.10.0                    # Gaussian KDE for heatmap generation
+scikit-learn>=1.2.0              # K-Means team color clustering, label encoding
+
+# --- Visualization & Dashboard ---
+matplotlib>=3.7.0                # 2D heatmap rendering, pitch diagrams, bar charts
+streamlit>=1.30.0                # Interactive web dashboard (no server setup required)
+pillow>=9.5.0                    # Image loading, resizing, format conversion
+
+# --- Configuration & File I/O ---
+pyyaml>=6.0                      # YAML config parser (config/config.yaml)
+
+# --- Video Processing Utilities ---
+imageio-ffmpeg>=0.4.0            # FFmpeg backend for video reading/writing
+
+# --- Report & Presentation Generation ---
+python-pptx>=0.6.21              # PowerPoint (.pptx) report generation
+
+# --- Model Weights Download (optional) ---
+gdown>=5.0.0                     # Google Drive large file download for model weights
