@@ -781,14 +781,15 @@ def render_evaluation():
 
     paper_md_path = "SportsVision_AI_Full_Report.md" if os.path.exists("SportsVision_AI_Full_Report.md") else "SportsVision_AI_IEEE_Paper.md"
     paper_html_path = "SportsVision_AI_Full_Report.html" if os.path.exists("SportsVision_AI_Full_Report.html") else "SportsVision_AI_IEEE_Paper.html"
+    pptx_path = "SportsVision_AI_Presentation.pptx"
 
-    p_col1, p_col2 = st.columns(2)
+    p_col1, p_col2, p_col3 = st.columns(3)
     with p_col1:
         if os.path.exists(paper_md_path):
             with open(paper_md_path, "r", encoding="utf-8") as f:
                 md_content = f.read()
             st.download_button(
-                label="📥 Download Full 10-Page IEEE Paper (.md)",
+                label="📥 Download IEEE Paper (.md)",
                 data=md_content,
                 file_name="SportsVision_AI_Full_Report.md",
                 mime="text/markdown",
@@ -799,10 +800,21 @@ def render_evaluation():
             with open(paper_html_path, "r", encoding="utf-8") as f:
                 html_content = f.read()
             st.download_button(
-                label="🖨️ Download Printable PDF/HTML Report (.html)",
+                label="🖨️ Printable PDF/HTML (.html)",
                 data=html_content,
                 file_name="SportsVision_AI_Full_Report.html",
                 mime="text/html",
+                use_container_width=True
+            )
+    with p_col3:
+        if os.path.exists(pptx_path):
+            with open(pptx_path, "rb") as f:
+                pptx_bytes = f.read()
+            st.download_button(
+                label="📊 Download Presentation (.pptx)",
+                data=pptx_bytes,
+                file_name="SportsVision_AI_Presentation.pptx",
+                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
                 use_container_width=True
             )
 
